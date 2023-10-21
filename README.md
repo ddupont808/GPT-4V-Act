@@ -36,7 +36,7 @@ npm start
 - ✅ Clicking 
 - 🔄 Typing (Partial) 
    - ✅ Typing characters (letters, numbers, strings) 
-   - ❌ Typing individual keycodes (enter, pgup, pgdown)
+   - ❌ Typing special keycodes (enter, pgup, pgdown)
 - ❌ Scrolling
 - ❌ Prompting user for more information
 - ❌ Remembering information relevant to task
