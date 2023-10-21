@@ -41,6 +41,8 @@ npm start
 - ❌ Prompting user for more information
 - ❌ Remembering information relevant to task
 
+If you have ideas, feedback, or want to contribute, feel free to create an Issue or reach out to ddupont@mit.edu
+
 ## Demonstration Prompt
 
 Below is an example of using the user-interface to instruct the agent to "play a random song for me"
