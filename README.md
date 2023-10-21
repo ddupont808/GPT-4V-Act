@@ -5,6 +5,10 @@
 
 GPT-4V-Act serves as an eloquent multimodal AI assistant that harmoniously combines GPT-4V(ision) with a web browser. It's designed to mirror the input and output of a human operator—primarily screen feedback and low-level mouse/keyboard interaction. The objective is to foster a smooth transition between human-computer operations, facilitating the creation of tools that considerably boost the accessibility of any user interface (UI), aid workflow automation, and enable automated UI testing.
 
+
+https://github.com/ddupont808/GPT-4V-Act/assets/3820588/fbcde8d1-a7d6-4089-95f6-fd099cc98a0d
+
+
 ## How it works
 
 GPT-4V-Act leverages both [GPT-4V(ision)](https://openai.com/research/gpt-4v-system-card) and [Set-of-Mark Prompting](https://arxiv.org/abs/2310.11441), together with a tailored auto-labeler. This auto-labeler assigns a unique numerical ID to each interactable UI element.
