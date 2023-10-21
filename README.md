@@ -28,6 +28,18 @@ npm install
 npm start
 ```
 
+## Features
+
+- 🔄 Vision (Partial) 
+   - 🔄 Auto-labeling DOM elements (letters, numbers, strings) 
+   - ❌ General auto-labeler (using sam)
+- ✅ Clicking 
+- 🔄 Typing (Partial) 
+   - ✅ Typing characters (letters, numbers, strings) 
+   - ❌ Typing individual keycodes (enter, pgup, pgdown)
+- ❌ Prompting user for more information
+- ❌ Remembering information relevant to task
+
 ## Demonstration Prompt
 
 Below is an example of using the user-interface to instruct the agent to "play a random song for me"
