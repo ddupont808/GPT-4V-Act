@@ -31,12 +31,13 @@ npm start
 ## Features
 
 - 🔄 Vision (Partial) 
-   - 🔄 Auto-labeling DOM elements (letters, numbers, strings) 
+   - 🔄 Auto-labeling DOM elements (using js) 
    - ❌ General auto-labeler (using sam)
 - ✅ Clicking 
 - 🔄 Typing (Partial) 
    - ✅ Typing characters (letters, numbers, strings) 
    - ❌ Typing individual keycodes (enter, pgup, pgdown)
+- ❌ Scrolling
 - ❌ Prompting user for more information
 - ❌ Remembering information relevant to task
 
