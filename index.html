@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style> 
+    ::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #27272a;
+        border-radius: 0.375rem;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+        </style>
+</head>
+
+<body class="bg-zinc-900 h-screen" style="-webkit-app-region: drag">
+
+    <div class="h-full flex gap-3 p-3">
+    
+        <!-- Browser Column -->
+        <div class="grow flex flex-col space-y-2 bg-zinc-800 p-2 rounded-xl shadow-md h-full border border-indigo-700/50">
+            <!-- Navigation Row -->
+            <div class="flex items-center space-x-2"
+            style="-webkit-app-region: no-drag">
+                <!-- Back Button -->
+                <button class="hover:bg-indigo-700/50 text-white p-1 rounded-full w-8 h-8" id="backButton">
+                    <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"></path>
+                      </svg>
+                </button>
+
+                <!-- Forward Button -->
+                <button class="hover:bg-indigo-700/50 text-white p-1 rounded-full w-8 h-8" id="forwardButton">
+                    <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z"></path>
+                      </svg>
+                </button>
+
+                <!-- Reload Button -->
+                <button class="hover:bg-indigo-700/50 text-white p-1 rounded-full w-8 h-8" id="reloadButton">
+                    <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z"></path>
+                      </svg>
+                </button>
+                
+                <!-- URL Input -->
+                <input type="url" placeholder="Enter URL..." id="urlInput"
+                    class="flex-grow py-2 px-4 ml-2 rounded-full text-zinc-400
+                    bg-zinc-700 focus:outline-none text-sm">
+            </div>
+            
+            <!-- WebView Placeholder (use an iframe or embed for an actual webview) -->
+            <webview class="flex-grow bg-white border border-zinc-700 overflow-hidden rounded-md scrollbar"
+                    style="-webkit-app-region: no-drag"
+                    autosize="on"
+                    src="https://google.com"
+                    preload="./preload-view.js"
+                    id="webview"
+            ></webview>
+
+            <!-- Row of Buttons below the WebView -->
+            <div class="grid grid-cols-4 gap-2"
+            style="-webkit-app-region: no-drag">
+                <button class="bg-indigo-700 text-white p-2 rounded-md" onclick="webview.openDevTools()">Open DevTools</button>
+                <button class="bg-indigo-700 text-white p-2 rounded-md" id="screenshot">Observe</button>
+                <button class="bg-indigo-700 text-white p-2 rounded-md" id="continue">Continue</button>
+                <button class="bg-emerald-700 text-white p-2 rounded-md" id="execute">Execute</button>
+            </div>
+        </div>
+
+        
+        <!-- Chat Column -->
+        <div class="flex flex-col grow space-y-2 max-w-sm p-4 pt-8 rounded-xl h-full">
+            <div id="chat-container" class="flex-grow overflow-y-auto scrollbar"  style="-webkit-app-region: no-drag">
+                <!-- Sample chat bubbles -->
+                <div class="mb-2 mr-8">
+                    <div class="py-2 px-3 bg-indigo-700 text-indigo-200 rounded-lg shadow-md break-words">
+                        Hello, how can I help?
+                    </div>
+                </div>
+                <!-- <div class="mb-2 ml-8">
+                    <div class="py-2 px-3 bg-zinc-200 text-zinc-700 rounded-lg shadow-md break-words">
+                        I have a question about Tailwind.
+                    </div>
+                </div> -->
+            </div>
+            <!-- Input for sending message -->
+            <div class="relative" style="-webkit-app-region: no-drag">
+                <input type="text" placeholder="Type your message..." 
+                       class="p-2 w-full pl-4 pr-10 rounded-md border bg-zinc-800 text-white border-zinc-950/50 shadow focus:border-indigo-700 focus:outline-none placeholder-gray-500">
+                
+                <button id="send" class="absolute inset-y-0 mt-2 right-3 flex items-center justify-center w-7 h-7 p-1 hover:bg-indigo-700 rounded text-zinc-400">
+                    <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M3.105 2.289a.75.75 0 00-.826.95l1.414 4.925A1.5 1.5 0 005.135 9.25h6.115a.75.75 0 010 1.5H5.135a1.5 1.5 0 00-1.442 1.086l-1.414 4.926a.75.75 0 00.826.95 28.896 28.896 0 0015.293-7.154.75.75 0 000-1.115A28.897 28.897 0 003.105 2.289z"></path>
+                      </svg>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    
+</body>
+</html>
