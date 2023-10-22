@@ -70,18 +70,18 @@ window.addEventListener('popstate', () => {
     ipcRenderer.send('current-url', window.location.href);
 });
 
-
 ipcRenderer.on('observer', (event, state, payload) => {
-    switch (state) {
-        case 'screenshot-start':
-            markPage();
-            break;
-        case 'screenshot-end':
-            unmarkPage();
-            break;
-    }
+  switch (state) {
+      case 'screenshot-start':
+          markPage();
+          break;
+      case 'screenshot-end':
+          unmarkPage();
+          break;
+  }
 });
 
+// DOM Labeler
 let labels = [];
 
 function unmarkPage() {
@@ -101,16 +101,27 @@ function markPage() {
     document.querySelectorAll('*')
   ).map(function(element) {
     var rect = element.getBoundingClientRect();
+
+    var center_x = rect.left + rect.width / 2;
+    var center_y = rect.top + rect.height / 2;
+    var elAtCenter = document.elementFromPoint(center_x, center_y);
+
     return {
       element: element,
-      include: (element.tagName === "INPUT" || element.tagName === "TEXTAREA" || element.tagName === "SELECT") ||
-      (element.tagName === "BUTTON" || element.tagName === "A" || (element.onclick != null) || window.getComputedStyle(element).cursor == "pointer"),
+      include: (elAtCenter === element || element.contains(elAtCenter)) && (
+        (element.tagName === "INPUT" || element.tagName === "TEXTAREA" || element.tagName === "SELECT") ||
+        (element.tagName === "BUTTON" || element.tagName === "A" || (element.onclick != null) || window.getComputedStyle(element).cursor == "pointer")
+      ),
       rect: {
         left: Math.max(rect.left - bodyRect.x, 0),
         top: Math.max(rect.top - bodyRect.y, 0),
         right: Math.min(rect.right - bodyRect.x, document.body.clientWidth),
         bottom: Math.min(rect.bottom - bodyRect.y, document.body.clientHeight)
       },
+      bbox: [
+        Math.floor(rect.left), Math.floor(rect.top), 
+        Math.floor(rect.width), Math.floor(rect.height)
+      ],
       text: element.textContent.trim().replace(/\s{2,}/g, ' ')
     };
   }).filter(item =>
@@ -135,14 +146,15 @@ function markPage() {
     newElement = document.createElement("div");
     var borderColor = getRandomColor();
     newElement.style.outline = `2px dashed ${borderColor}`;
-    newElement.style.position = "absolute";
-    newElement.style.left = item.rect.left + "px";
-    newElement.style.top = item.rect.top + "px";
-    newElement.style.width = (item.rect.right - item.rect.left) + "px";
-    newElement.style.height = (item.rect.bottom - item.rect.top) + "px";
+    newElement.style.position = "fixed";
+    newElement.style.left = item.bbox[0] + "px";
+    newElement.style.top = item.bbox[1] + "px";
+    newElement.style.width = item.bbox[2] + "px";
+    newElement.style.height = item.bbox[3] + "px";
     newElement.style.pointerEvents = "none";
     newElement.style.boxSizing = "border-box";
     newElement.style.zIndex = 2147483647;
+    // newElement.style.background = `${borderColor}80`;
     
     // Add floating label at the corner
     var label = document.createElement("span");
@@ -165,7 +177,8 @@ function markPage() {
   ipcRenderer.send('label-data', JSON.stringify(items.map(item => {
     return {
         x: (item.rect.left + item.rect.right) / 2, 
-        y: (item.rect.top + item.rect.bottom) / 2
+        y: (item.rect.top + item.rect.bottom) / 2,
+        bbox: item.bbox
     }
   })));
 }

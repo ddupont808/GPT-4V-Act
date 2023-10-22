@@ -99,11 +99,11 @@ app.whenReady().then(async () => {
     }
   });
 
-  let webviewId;
+  let webview;
   let labelData;
   ipcMain.on('webview-ready', async (event, id) => {
-    webviewId = id;
-    console.log('Acquired webviewId ' + webviewId);
+    webview = webContents.fromId(id);
+    console.log(`Acquired webviewId ${id}`);
   });
 
   ipcMain.on('label-data', (event, data) => {
@@ -111,16 +111,87 @@ app.whenReady().then(async () => {
   });
 
   async function screenshot() {
-    const wc = webContents.fromId(webviewId);
-    wc.send('observer', 'screenshot-start');
+    webview.send('observer', 'screenshot-start');
     await sleep(100);
-    const image = await wc.capturePage();
-    wc.send('observer', 'screenshot-end');
+    const image = await webview.capturePage();
+    webview.send('observer', 'screenshot-end');
+
     await fs.writeFile('tmp/screenshot.png', image.toPNG());
     await controller.uploadImage('tmp/screenshot.png');
   }
 
+  async function exportLabel() {
+    webview.send('observer', 'screenshot-start');
+    await sleep(10);
+    const savedData = labelData;
+    webview.send('observer', 'screenshot-end');
+    await sleep(100);
+    const image = await webview.capturePage();
+
+    // Create unique filename
+    const timestamp = Date.now();
+    const screenshotFilename = `screenshot_${timestamp}.png`;
+    const {width, height} = image.getSize();
+
+    // Save the image with unique name
+    await fs.writeFile(`dataset/${screenshotFilename}`, image.toPNG());
+    
+    let coco = JSON.parse(await fs.readFile('dataset/_annotations.coco.json'));
+    const image_id = Math.max(...coco.images.map(({ id }) => id), 0) + 1;
+    const annotations_id = Math.max(...coco.annotations.map(({ id }) => id), 0) + 1;
+
+    let annotations = savedData.map(({ bbox }, index) => {
+      return {
+        id: index + annotations_id,
+        image_id,
+        category_id: 0,
+        bbox, 
+        area: bbox[2] * bbox[3],
+        segmentation: [],
+        iscrowd: 0
+      }
+    });
+  
+    coco.annotations = coco.annotations.concat(annotations);
+    
+    // update coco image format for labeling
+    let cocoImageFormat = { 
+      id: image_id,
+      width,
+      height,
+      file_name: screenshotFilename, // updated filename
+      license: 1, 
+      date_captured: new Date()
+    };
+
+    coco.images.push(cocoImageFormat);
+
+    await fs.writeFile('dataset/_annotations.coco.json', JSON.stringify(coco, null, 2));
+  }
+
   ipcMain.on('screenshot', async (event, id) => screenshot());
+  ipcMain.on('export', async (event, id) => exportLabel());
+
+  ipcMain.on('randomizeSize', async (event, id) => {
+    const [minWidth, minHeight] = [1280, 720];
+    const [maxWidth, maxHeight] = [3440, 1440];
+
+    // Get the old window size and position
+    const [oldWidth, oldHeight] = win.getSize();
+    const [oldX, oldY] = win.getPosition();
+
+    // Generate new random size
+    const width = Math.floor(Math.random() * (maxWidth - minWidth + 1) + minWidth);
+    const height = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
+
+    // Compute new position to keep bottom-right corner in the same position
+    const x = oldX + (oldWidth - width);
+    const y = oldY + (oldHeight - height);
+
+    // Set new size and position
+    win.setSize(width, height, false);
+    win.setPosition(x, y, false);
+  });
 
   let currentTask;
   
@@ -150,47 +221,45 @@ app.whenReady().then(async () => {
     win.webContents.send('end_turn', msg);
 
     action = () => {
-      const wc = webContents.fromId(webviewId);
       if(data != null) {
         switch(data.nextAction.action) {
           case "click":
-            console.log(`clicking ${JSON.stringify(labelData[data.nextAction.element])}`);
-            wc.sendInputEvent({
-              type: 'mouseDown', 
-              x: labelData[data.nextAction.element].x, 
-              y: labelData[data.nextAction.element].y,
-              clickCount: 1
-            });
-            wc.sendInputEvent({
-              type: 'mouseUp', 
-              x: labelData[data.nextAction.element].x, 
-              y: labelData[data.nextAction.element].y,
-              clickCount: 1
-            });
-            break;
-          case "type":
-            console.log(`typing ${data.nextAction.text} into ${JSON.stringify(labelData[data.nextAction.element])}`);
-            wc.sendInputEvent({
-              type: 'mouseDown', 
-              x: labelData[data.nextAction.element].x, 
-              y: labelData[data.nextAction.element].y,
-              clickCount: 1
-            });
-            wc.sendInputEvent({
-              type: 'mouseUp', 
-              x: labelData[data.nextAction.element].x, 
-              y: labelData[data.nextAction.element].y,
-              clickCount: 1
-            });
-
-            for(let char of data.nextAction.text) {
-              wc.sendInputEvent({
-                type: 'char', 
-                keyCode: char
+              console.log(`clicking ${JSON.stringify(labelData[data.nextAction.element])}`);
+              let { x, y } = labelData[data.nextAction.element];
+              webview.sendInputEvent({
+                type: 'mouseDown', 
+                x, y,
+                clickCount: 1
               });
+              webview.sendInputEvent({
+                type: 'mouseUp', 
+                x, y,
+                clickCount: 1
+              });
+              break;
+          case "type": {
+              console.log(`typing ${data.nextAction.text} into ${JSON.stringify(labelData[data.nextAction.element])}`);
+              let { x, y } = labelData[data.nextAction.element];
+              webview.sendInputEvent({
+                type: 'mouseDown', 
+                x, y,
+                clickCount: 1
+              });
+              webview.sendInputEvent({
+                type: 'mouseUp', 
+                x, y,
+                clickCount: 1
+              });
+
+              for(let char of data.nextAction.text) {
+                webview.sendInputEvent({
+                  type: 'char', 
+                  keyCode: char
+                });
+              }
+              
+              break;
             }
-            
-            break;
           default:
             console.log(`unknown action ${JSON.stringify(data.nextAction)}`);
             break;

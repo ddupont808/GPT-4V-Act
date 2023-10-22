@@ -1,7 +1,8 @@
 const { ipcRenderer } = require('electron');
 
+document.addEventListener("DOMContentLoaded", function () {
+    // mini-browser setup
 
-window.addEventListener('DOMContentLoaded', () => {
     const urlInput = document.getElementById('urlInput');
     const webview = document.getElementById('webview');
 
@@ -36,20 +37,22 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log(webview.getWebContentsId());
         ipcRenderer.send('webview-ready', webview.getWebContentsId());
     });
-});
+    
+    // Agent stuff
 
-
-document.addEventListener("DOMContentLoaded", function () {
     const inputElement = document.querySelector('input[type="text"]');
     const sendButton = document.querySelector('button#send');
     const chatContainer = document.querySelector('#chat-container');
 
     document.querySelector('#screenshot').addEventListener('click', () => ipcRenderer.send('screenshot'));
-
     document.querySelector('#continue').addEventListener('click', () => ipcRenderer.send('continue'));
-
     document.querySelector('#execute').addEventListener('click', () => ipcRenderer.send('execute'));
 
+    document.querySelector('#mark').addEventListener('click', () => webview.send('observer', 'screenshot-start'));
+    document.querySelector('#unmark').addEventListener('click', () => webview.send('observer', 'screenshot-end'));
+    document.querySelector('#export').addEventListener('click', () => ipcRenderer.send('export'));
+    document.querySelector('#randomizeSize').addEventListener('click', () => ipcRenderer.send('randomizeSize'));
+    
     ipcRenderer.on('end_turn', (event, content) => {
         // Create the message div and its container
         const messageDiv = document.createElement('div');

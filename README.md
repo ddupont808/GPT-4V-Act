@@ -31,8 +31,8 @@ npm start
 ## Features
 
 - 🔄 Vision (Partial) 
-   - 🔄 Auto-labeling DOM elements (using js) 
-   - ❌ General auto-labeler (using sam)
+   - ✅ JS DOM auto-labeler (w/ COCO export)  
+   - ❌ AI auto-labeler
 - ✅ Clicking 
 - 🔄 Typing (Partial) 
    - ✅ Typing characters (letters, numbers, strings) 
