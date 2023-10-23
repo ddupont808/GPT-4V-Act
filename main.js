@@ -122,10 +122,10 @@ app.whenReady().then(async () => {
 
   async function exportLabel() {
     webview.send('observer', 'screenshot-start');
-    await sleep(10);
+    await sleep(200);
     const savedData = labelData;
     webview.send('observer', 'screenshot-end');
-    await sleep(100);
+    await sleep(200);
     const image = await webview.capturePage();
 
     // Create unique filename
@@ -140,17 +140,20 @@ app.whenReady().then(async () => {
     const image_id = Math.max(...coco.images.map(({ id }) => id), 0) + 1;
     const annotations_id = Math.max(...coco.annotations.map(({ id }) => id), 0) + 1;
 
-    let annotations = savedData.map(({ bbox }, index) => {
-      return {
-        id: index + annotations_id,
-        image_id,
-        category_id: 0,
-        bbox, 
-        area: bbox[2] * bbox[3],
-        segmentation: [],
-        iscrowd: 0
-      }
-    });
+    let annotations = savedData.reduce((all, { bboxs }, index) => {
+      let bbox_annotations = bboxs.map((bbox, bboxIndex) => {
+        return {
+          id: index + annotations_id + bboxIndex, 
+          image_id,
+          category_id: 0,
+          bbox, 
+          area: bbox[2] * bbox[3],
+          segmentation: [],
+          iscrowd: 0
+        }
+      });
+      return all.concat(bbox_annotations);
+    }, []);
   
     coco.annotations = coco.annotations.concat(annotations);
     
@@ -172,25 +175,52 @@ app.whenReady().then(async () => {
   ipcMain.on('screenshot', async (event, id) => screenshot());
   ipcMain.on('export', async (event, id) => exportLabel());
 
-  ipcMain.on('randomizeSize', async (event, id) => {
-    const [minWidth, minHeight] = [1280, 720];
-    const [maxWidth, maxHeight] = [3440, 1440];
+  ipcMain.on('randomize', async (event, id) => {
+    function randomizeSize() {
+      const [minWidth, minHeight] = [1280, 720];
+      const [maxWidth, maxHeight] = [3440, 1440];
 
-    // Get the old window size and position
-    const [oldWidth, oldHeight] = win.getSize();
-    const [oldX, oldY] = win.getPosition();
+      // Get the old window size and position
+      const [oldWidth, oldHeight] = win.getSize();
+      const [oldX, oldY] = win.getPosition();
 
-    // Generate new random size
-    const width = Math.floor(Math.random() * (maxWidth - minWidth + 1) + minWidth);
-    const height = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
+      // Generate new random size
+      const width = Math.floor(Math.random() * (maxWidth - minWidth + 1) + minWidth);
+      const height = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
 
-    // Compute new position to keep bottom-right corner in the same position
-    const x = oldX + (oldWidth - width);
-    const y = oldY + (oldHeight - height);
+      // Compute new position to keep bottom-right corner in the same position
+      const x = oldX + (oldWidth - width);
+      const y = oldY + (oldHeight - height);
 
-    // Set new size and position
-    win.setSize(width, height, false);
-    win.setPosition(x, y, false);
+      // Set new size and position
+      win.setSize(width, height, false);
+      win.setPosition(x, y, false);
+    }
+
+    const urls = JSON.parse(await fs.readFile('dataset/urls.json'));
+    for(let i = 0; i < 10; i++) {
+      webview.send('navigate-webview', 'loadURL', urls.shuffles[parseInt(Math.random() * urls.shuffles.length)]);
+      await sleep(5000);
+      for(let i = 0; i < 10; i++) {
+        randomizeSize();
+        await sleep(100);
+        webview.send('shuffle');
+        await sleep(1500);
+        await exportLabel();
+      }
+    }
+
+    for(let i = 0; i < 10; i++) {
+      webview.send('navigate-webview', 'loadURL', urls.random[parseInt(Math.random() * urls.random.length)]);
+      await sleep(5000);
+      for(let i = 0; i < 10; i++) {
+        randomizeSize();
+        await sleep(100);
+        webview.send('randomize');
+        await sleep(1500);
+        await exportLabel();
+      }
+    }
   });
 
   let currentTask;

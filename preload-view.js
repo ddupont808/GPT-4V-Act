@@ -70,6 +70,65 @@ window.addEventListener('popstate', () => {
     ipcRenderer.send('current-url', window.location.href);
 });
 
+ipcRenderer.on('randomize', (event) => {
+   // Define random x and y coordinates within the dimensions of the document
+   var x = Math.floor(Math.random() * (document.body.scrollWidth + 1));
+   var y = Math.floor(Math.random() * (document.body.scrollHeight + 1));
+   
+   // Scroll to the random positions
+   window.scrollTo(x, y);
+});
+
+ipcRenderer.on('shuffle', (event) => {
+  // Helper function to shuffle a string
+  function shuffleString(str) {
+    var arr = str.split(''); 
+    var len = arr.length;
+
+    // While there remain elements to shuffle…
+    for (var i = len - 1; i > 0; i--) {
+        // Pick a remaining element…
+        var j = Math.floor(Math.random() * (i + 1));
+        // And swap it with the current element.
+        var temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    return arr.join(''); // Convert Array back to string
+  }
+
+  function shuffleChildren(parent) {
+    if(parent.children && parent.children.length > 0) {
+        var children = Array.from(parent.children);
+        while (children.length) {
+            // Pick a random index
+            var randomIndex = Math.floor(Math.random() * children.length);
+            // Get the child at the random index
+            var child = children.splice(randomIndex, 1)[0];
+            // Append the child to the parent
+            parent.appendChild(child);
+            // If child node only contains text, then shuffle the text
+            if(child.children.length === 0) {
+                child.textContent = shuffleString(child.textContent);
+            }
+            // Recursively shuffle children's children
+            shuffleChildren(child);
+        }
+    }
+  }
+
+  // Call the function with the body as the parent node
+  shuffleChildren(document.body);
+
+  // Define random x and y coordinates within the dimensions of the document
+  var x = Math.floor(Math.random() * (document.body.scrollWidth + 1));
+  var y = Math.floor(Math.random() * (document.body.scrollHeight + 1));
+  
+  // Scroll to the random positions
+  window.scrollTo(x, y);
+});
+
 ipcRenderer.on('observer', (event, state, payload) => {
   switch (state) {
       case 'screenshot-start':
@@ -100,32 +159,44 @@ function markPage() {
   var items = Array.prototype.slice.call(
     document.querySelectorAll('*')
   ).map(function(element) {
-    var rect = element.getBoundingClientRect();
+    var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    
+    var rects = [...element.getClientRects()].filter(bb => {
+      var center_x = bb.left + bb.width / 2;
+      var center_y = bb.top + bb.height / 2;
+      var elAtCenter = document.elementFromPoint(center_x, center_y);
 
-    var center_x = rect.left + rect.width / 2;
-    var center_y = rect.top + rect.height / 2;
-    var elAtCenter = document.elementFromPoint(center_x, center_y);
+      return elAtCenter === element || element.contains(elAtCenter) 
+    }).map(bb => {
+      const rect = {
+        left: Math.max(0, bb.left),
+        top: Math.max(0, bb.top),
+        right: Math.min(vw, bb.right),
+        bottom: Math.min(vh, bb.bottom)
+      };
+      return {
+        ...rect,
+        width: rect.right - rect.left,
+        height: rect.bottom - rect.top
+      }
+    });
+
+    var area = rects.reduce((acc, rect) => acc + rect.width * rect.height, 0);
 
     return {
       element: element,
-      include: (elAtCenter === element || element.contains(elAtCenter)) && (
+      include: 
         (element.tagName === "INPUT" || element.tagName === "TEXTAREA" || element.tagName === "SELECT") ||
-        (element.tagName === "BUTTON" || element.tagName === "A" || (element.onclick != null) || window.getComputedStyle(element).cursor == "pointer")
-      ),
-      rect: {
-        left: Math.max(rect.left - bodyRect.x, 0),
-        top: Math.max(rect.top - bodyRect.y, 0),
-        right: Math.min(rect.right - bodyRect.x, document.body.clientWidth),
-        bottom: Math.min(rect.bottom - bodyRect.y, document.body.clientHeight)
-      },
-      bbox: [
-        Math.floor(rect.left), Math.floor(rect.top), 
-        Math.floor(rect.width), Math.floor(rect.height)
-      ],
+        (element.tagName === "BUTTON" || element.tagName === "A" || (element.onclick != null) || window.getComputedStyle(element).cursor == "pointer") ||
+        (element.tagName === "IFRAME" || element.tagName === "VIDEO")
+      ,
+      area,
+      rects,
       text: element.textContent.trim().replace(/\s{2,}/g, ' ')
     };
   }).filter(item =>
-    item.include && ((item.rect.right - item.rect.left) * (item.rect.bottom - item.rect.top) >= 20)
+    item.include && (item.area >= 20)
   );
 
   // Only keep inner clickable items
@@ -143,42 +214,44 @@ function markPage() {
 
   // Lets create a floating border on top of these elements that will always be visible
   items.forEach(function(item, index) {
-    newElement = document.createElement("div");
-    var borderColor = getRandomColor();
-    newElement.style.outline = `2px dashed ${borderColor}`;
-    newElement.style.position = "fixed";
-    newElement.style.left = item.bbox[0] + "px";
-    newElement.style.top = item.bbox[1] + "px";
-    newElement.style.width = item.bbox[2] + "px";
-    newElement.style.height = item.bbox[3] + "px";
-    newElement.style.pointerEvents = "none";
-    newElement.style.boxSizing = "border-box";
-    newElement.style.zIndex = 2147483647;
-    // newElement.style.background = `${borderColor}80`;
-    
-    // Add floating label at the corner
-    var label = document.createElement("span");
-    label.textContent = index;
-    label.style.position = "absolute";
-    label.style.top = "-19px";
-    label.style.left = "0px";
-    label.style.background = borderColor;
-    label.style.color = "white";
-    label.style.padding = "2px 4px";
-    label.style.fontSize = "12px";
-    label.style.borderRadius = "2px";
-    newElement.appendChild(label);
-    
-    document.body.appendChild(newElement);
-    labels.push(newElement);
-    // item.element.setAttribute("-ai-label", label.textContent);
+    item.rects.forEach((bbox) => {
+      newElement = document.createElement("div");
+      var borderColor = getRandomColor();
+      newElement.style.outline = `2px dashed ${borderColor}`;
+      newElement.style.position = "fixed";
+      newElement.style.left = bbox.left + "px";
+      newElement.style.top = bbox.top + "px";
+      newElement.style.width = bbox.width + "px";
+      newElement.style.height = bbox.height + "px";
+      newElement.style.pointerEvents = "none";
+      newElement.style.boxSizing = "border-box";
+      newElement.style.zIndex = 2147483647;
+      // newElement.style.background = `${borderColor}80`;
+      
+      // Add floating label at the corner
+      var label = document.createElement("span");
+      label.textContent = index;
+      label.style.position = "absolute";
+      label.style.top = "-19px";
+      label.style.left = "0px";
+      label.style.background = borderColor;
+      label.style.color = "white";
+      label.style.padding = "2px 4px";
+      label.style.fontSize = "12px";
+      label.style.borderRadius = "2px";
+      newElement.appendChild(label);
+      
+      document.body.appendChild(newElement);
+      labels.push(newElement);
+      // item.element.setAttribute("-ai-label", label.textContent);
+    });
   })
 
   ipcRenderer.send('label-data', JSON.stringify(items.map(item => {
     return {
-        x: (item.rect.left + item.rect.right) / 2, 
-        y: (item.rect.top + item.rect.bottom) / 2,
-        bbox: item.bbox
+        x: (item.rects[0].left + item.rects[0].right) / 2, 
+        y: (item.rects[0].top + item.rects[0].bottom) / 2,
+        bboxs: item.rects.map(({left, top, width, height}) => [left, top, width, height])
     }
   })));
 }
