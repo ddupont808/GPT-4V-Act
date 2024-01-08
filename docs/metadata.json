@@ -1,0 +1,40 @@
+{
+    "url": {
+        "full": "https://github.com/ddupont808/GPT-4V-Act",
+        "partial": "ddupont808/GPT-4V-Act"
+    },
+    "file_mapping": {
+        "0": {
+            "filepath": "/README.md",
+            "entry_id": 0,
+            "language_id": "plain-text"
+        },
+        "1": {
+            "filepath": "/chatgpt.js",
+            "entry_id": 10,
+            "language_id": "javascript"
+        },
+        "2": {
+            "filepath": "/main.js",
+            "entry_id": 20,
+            "language_id": "javascript"
+        },
+        "3": {
+            "filepath": "/package.json",
+            "entry_id": 40,
+            "language_id": "json"
+        },
+        "4": {
+            "filepath": "/preload-view.js",
+            "entry_id": 44,
+            "language_id": "javascript"
+        },
+        "5": {
+            "filepath": "/preload.js",
+            "entry_id": 62,
+            "language_id": "javascript"
+        }
+    },
+    "project_name": "GPT-4V-Act",
+    "split_count": 1
+}
