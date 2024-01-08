@@ -1,0 +1,10 @@
+{
+    "summary": "This is a package.json file for an electron app called \"ai-browser\" with dependencies on electron, node-fetch, puppeteer, puppeteer-extra, and puppeteer-extra-plugin-stealth.",
+    "details": [
+        {
+            "comment": "This is a package.json file for an electron app called \"ai-browser\" with dependencies on electron, node-fetch, puppeteer, puppeteer-extra, and puppeteer-extra-plugin-stealth.",
+            "location": "\"/media/root/Toshiba XG3/works/GPT-4V-Act/docs/src/package.json\":0-17",
+            "content": "{\n  \"name\": \"ai-browser\",\n  \"version\": \"1.0.0\",\n  \"description\": \"\",\n  \"main\": \"main.js\",\n  \"scripts\": {\n    \"start\": \"electron .\"\n  },\n  \"author\": \"\",\n  \"license\": \"ISC\",\n  \"dependencies\": {\n    \"electron\": \"^27.0.1\",\n    \"node-fetch\": \"^3.3.2\",\n    \"puppeteer\": \"^21.4.0\",\n    \"puppeteer-extra\": \"^3.3.6\",\n    \"puppeteer-extra-plugin-stealth\": \"^2.11.2\"\n  }\n}"
+        }
+    ]
+}

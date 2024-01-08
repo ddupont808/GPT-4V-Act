@@ -1,0 +1,392 @@
+{
+    "0": {
+        "file_id": 0,
+        "content": "/README.md",
+        "type": "filepath"
+    },
+    "1": {
+        "file_id": 0,
+        "content": "GPT-4V-Act is a tool that combines GPT-4V and Set-of-Mark Prompting for UI automation, offering accessibility improvements, workflow automation, and testing. It requires ChatGPT Plus, has an auto-labeler for UI elements, defines action types and response formats for website tasks, and provides demonstration prompts with JSON markdown output.",
+        "type": "summary"
+    },
+    "2": {
+        "file_id": 0,
+        "content": "# GPT-4V-Act: Chromium Copilot\n> ⚠️ **Important Note:** As GPT-4V(ision) has not yet been made publicly available, this project necessitates an active ChatGPT Plus subscription for multimodal prompting access. It's worth noting that the tactics used by this project to tap into an unofficial GPT-4V API may contravene the associated ChatGPT Term of Service clause:\n>> **2.** (c) **Restrictions:**  You may not ... (iv) except as permitted through the API, use any automated or programmatic method to extract data or output from the Services, including scraping, web harvesting, or web data extraction;\nGPT-4V-Act serves as an eloquent multimodal AI assistant that harmoniously combines GPT-4V(ision) with a web browser. It's designed to mirror the input and output of a human operator—primarily screen feedback and low-level mouse/keyboard interaction. The objective is to foster a smooth transition between human-computer operations, facilitating the creation of tools that considerably boost the accessibility of any user interface (UI), aid workflow automation, and enable automated UI testing.",
+        "type": "code",
+        "location": "/README.md:1-6"
+    },
+    "3": {
+        "file_id": 0,
+        "content": "This is a project that utilizes GPT-4V(ision) and a web browser to create a smooth human-computer interface for various tasks, such as UI accessibility improvements, workflow automation, and automated UI testing. Requires an active ChatGPT Plus subscription due to unofficial API usage.",
+        "type": "comment"
+    },
+    "4": {
+        "file_id": 0,
+        "content": "https://github.com/ddupont808/GPT-4V-Act/assets/3820588/fbcde8d1-a7d6-4089-95f6-fd099cc98a0d\n## How it works\nGPT-4V-Act leverages both [GPT-4V(ision)](https://openai.com/research/gpt-4v-system-card) and [Set-of-Mark Prompting](https://arxiv.org/abs/2310.11441), together with a tailored auto-labeler. This auto-labeler assigns a unique numerical ID to each interactable UI element.\nBy incorporating a task and a screenshot as input, GPT-4V-Act can deduce the subsequent action required to accomplish a task. For mouse/keyboard output, it can refer to the numerical labels for exact pixel coordinates.\n**Get Started!**\n```bash\n# Clone the repo\ngit clone https://github.com/ddupont808/GPT-4V-Act ai-browser\n# Navigate to the repo directory\ncd ai-browser\n# Install the required packages\nnpm install\n# Start the demo\nnpm start\n```\n## Features\n- 🔄 Vision (Partial) \n   - ✅ JS DOM auto-labeler (w/ COCO export)  \n   - ❌ AI auto-labeler\n- ✅ Clicking \n- 🔄 Typing (Partial) \n   - ✅ Typing characters (letters, numbers, strings) \n   - ❌ Typing special keycodes (enter, pgup, pgdown)",
+        "type": "code",
+        "location": "/README.md:9-39"
+    },
+    "5": {
+        "file_id": 0,
+        "content": "GPT-4V-Act is a tool that uses GPT-4V and Set-of-Mark Prompting to automate UI interactions. It has an auto-labeler for assigning numerical IDs to UI elements, and can perform actions based on tasks and screenshots. Clone the repo, navigate to it, install packages, and start the demo.",
+        "type": "comment"
+    },
+    "6": {
+        "file_id": 0,
+        "content": "- ❌ Scrolling\n- ❌ Prompting user for more information\n- ❌ Remembering information relevant to task\nIf you have ideas, feedback, or want to contribute, feel free to create an Issue or reach out to ddupont@mit.edu\n## Demonstration Prompt\nBelow is an example of using the user-interface to instruct the agent to \"play a random song for me\"\n![](demo1.png)\nThis is the prompt seen by GPT-4V and the corresponding output\n### User\n![](demo2.png)\n```markdown\ntask: play a random song for me\ntype ClickAction = { action: \"click\", element: number }\ntype TypeAction = { action: \"type\", element: number, text: string }\ntype ScrollAction = { action: \"scroll\", direction: \"up\" | \"down\" }\ntype RequestInfoFromUser = { action: \"request-info\", prompt: string }\ntype RememberInfoFromSite = { action: \"remember-info\", info: string }\ntype Done = { action: \"done\" }\n## response format\n{\n  briefExplanation: string,\n  nextAction: ClickAction | TypeAction | ScrollAction | RequestInfoFromUser | RememberInfoFromSite | Done\n}\n## instructions\n# observe the screenshot, and think about the next action",
+        "type": "code",
+        "location": "/README.md:40-73"
+    },
+    "7": {
+        "file_id": 0,
+        "content": "This code defines action types and response format for instructing the agent to perform tasks on a website. It provides an example demonstration prompt and instructions for observation and next actions.",
+        "type": "comment"
+    },
+    "8": {
+        "file_id": 0,
+        "content": "# output your response in a json markdown code block\n```\n### Assistant\n```json\n{\n  \"briefExplanation\": \"I'll type 'random song' into the search bar to find a song for you.\",\n  \"nextAction\": { \"action\": \"type\", \"element\": 7, \"text\": \"random song\" }\n}\n```",
+        "type": "code",
+        "location": "/README.md:74-83"
+    },
+    "9": {
+        "file_id": 0,
+        "content": "This code is asking the AI to output its response in a JSON markdown code block. The JSON object contains a brief explanation of the action (\"I'll type 'random song' into the search bar to find a song for you.\") and a nextAction object with an action of \"type\", an element of 7, and text of \"random song\".",
+        "type": "comment"
+    },
+    "10": {
+        "file_id": 1,
+        "content": "/chatgpt.js",
+        "type": "filepath"
+    },
+    "11": {
+        "file_id": 1,
+        "content": "A user employs Puppeteer with a stealth plugin to interact with OpenAI chat, capturing and logging conversation data from the backend API. The code is a chatbot implementation using Puppeteer library, featuring methods for typing, sending, uploading images, and closing browser upon completion.",
+        "type": "summary"
+    },
+    "12": {
+        "file_id": 1,
+        "content": "const puppeteer = require('puppeteer-extra');\nconst EventEmitter = require('events');\n// add stealth plugin and use defaults (all evasion techniques) \nconst StealthPlugin = require('puppeteer-extra-plugin-stealth') \npuppeteer.use(StealthPlugin()) \nconst {executablePath} = require('puppeteer') \nclass OpenAIChatController extends EventEmitter {\n    constructor() {\n        super();\n        this.browser = null;\n        this.page = null;\n    }\n    async initialize() {\n        this.browser = await puppeteer.launch({\n            headless: false, // Launch browser in non-headless mode so you can see what's happening\n            userDataDir: \"./user_data\", // Persist user data so you can login\n            executablePath: executablePath()\n        });\n        this.page = await this.browser.newPage();\n        await this.page.exposeFunction('emitEndTurn', (data) => this.emit('end_turn', data));\n        await this.page.goto('https://chat.openai.com/?model=gpt-4');\n        await this.preparePage();\n    }\n    async preparePage() {",
+        "type": "code",
+        "location": "/chatgpt.js:1-30"
+    },
+    "13": {
+        "file_id": 1,
+        "content": "Initializing Puppeteer with stealth plugin for browser emulation and launching a non-headless browser instance to interact with OpenAI chat.",
+        "type": "comment"
+    },
+    "14": {
+        "file_id": 1,
+        "content": "        await this.page.waitForSelector('input[type=\"file\"]');\n        await this.page.evaluate(() => {\n            const {fetch: origFetch} = window;\n            window.fetch = async (...args) => {\n              const response = await origFetch(...args);\n              if(args[0] === \"https://chat.openai.com/backend-api/conversation\") {\n                console.log(\"intercepting conversation...\");\n                const { body } = response.clone();\n                const raw = await new Response(body).text();\n                const chunks = raw.split('\\ndata: ');\n                for(let chunk of chunks) {\n                    chunk = chunk.trim();\n                    if(chunk.startsWith('{')) {\n                        console.log(chunk);\n                        try { \n                            let msg = JSON.parse(chunk);\n                            if(msg.message && msg.message.end_turn) {\n                                console.log(msg.message.content.parts);\n                                window.emitEndTurn(msg.message.content.parts.join(''));",
+        "type": "code",
+        "location": "/chatgpt.js:31-51"
+    },
+    "15": {
+        "file_id": 1,
+        "content": "Intercepting and logging conversation data from OpenAI backend API.",
+        "type": "comment"
+    },
+    "16": {
+        "file_id": 1,
+        "content": "                                break;\n                            }\n                        } catch( ex ) { }\n                    }\n                }\n              }\n              return response;\n            };\n        });\n    }\n    async typeIntoPrompt(text) {\n        if (!this.page) {\n            throw new Error('You need to initialize first');\n        }\n        await this.page.type('#prompt-textarea', text.split('\\n').join(';'));\n    }\n    async clickSendButton() {\n        if (!this.page) {\n            throw new Error('You need to initialize first');\n        }\n        await this.page.waitForSelector('button[data-testid=\"send-button\"]:not([disabled])');\n        await this.page.click('[data-testid=\"send-button\"]');\n    }\n    async uploadImage(filePath) {\n        if (!this.page) {\n            throw new Error('You need to initialize first');\n        }\n        await this.page.reload();\n        await this.preparePage();\n        const input = await this.page.$('input[type=\"file\"]');\n        await input.uploadFile(filePath);",
+        "type": "code",
+        "location": "/chatgpt.js:52-87"
+    },
+    "17": {
+        "file_id": 1,
+        "content": "This code is a part of a chatbot implementation using Puppeteer library. It contains methods to type into a prompt, click the send button, and upload an image. The `preparePage` method initializes the page with necessary configurations. It throws an error if the `page` variable is not initialized.",
+        "type": "comment"
+    },
+    "18": {
+        "file_id": 1,
+        "content": "        // wait until upload is complete\n        await this.page.waitForSelector('button[data-testid=\"send-button\"]:not([disabled])');\n    }\n    async close() {\n        if (this.browser) {\n            await this.browser.close();\n        }\n    }\n}\nmodule.exports = OpenAIChatController;",
+        "type": "code",
+        "location": "/chatgpt.js:88-100"
+    },
+    "19": {
+        "file_id": 1,
+        "content": "The code waits for an upload to complete and then closes the browser after that.",
+        "type": "comment"
+    },
+    "20": {
+        "file_id": 2,
+        "content": "/main.js",
+        "type": "filepath"
+    },
+    "21": {
+        "file_id": 2,
+        "content": "This code initializes modules, sets up a chat controller, defines actions, and handles various input events, including screenshots, data export, window resizing, and label exporting, while also handling unknown actions by logging messages.",
+        "type": "summary"
+    },
+    "22": {
+        "file_id": 2,
+        "content": "const { app, BrowserWindow, ipcMain, webContents } = require('electron')\nconst { promisify } = require('util');\nconst path = require('node:path')\nconst fs = require('fs/promises');\nconst sleep = promisify(setTimeout);\nconst OpenAIChatController = require('./chatgpt');\nlet win;\nconst controller = new OpenAIChatController();\nconst prompt = (task, info) => `task: ${task}\ntype ClickAction = { action: \"click\", element: number }\ntype TypeAction = { action: \"type\", element: number, text: string }\ntype ScrollAction = { action: \"scroll\", direction: \"up\" | \"down\" }\ntype RequestInfoFromUser = { action: \"request-info\", prompt: string }\ntype RememberInfoFromSite = { action: \"remember-info\", info: string }\ntype Done = { action: \"done\" }\n## response format\n{\n  briefExplanation: string,\n  nextAction: ClickAction | TypeAction | ScrollAction | RequestInfoFromUser | RememberInfoFromSite | Done\n}\n## response examples\n{\n  \"briefExplanation\": \"I'll type 'funny cat videos' into the search bar\"\n  \"nextAction\": { \"action\": \"type\", \"element\": 11, \"text\": \"funny cat videos\" }",
+        "type": "code",
+        "location": "/main.js:1-31"
+    },
+    "23": {
+        "file_id": 2,
+        "content": "This code initializes necessary modules, sets up an OpenAI chat controller, and defines various action types for user interactions. It also provides a response format with a brief explanation and the next action to be performed.",
+        "type": "comment"
+    },
+    "24": {
+        "file_id": 2,
+        "content": "}\n{\n  \"briefExplanation\": \"Today's doodle looks interesting, I'll click it\"\n  \"nextAction\": { \"action\": \"click\", \"element\": 9 }\n}\n{\n  \"briefExplanation\": \"I have to login to create a post\"\n  \"nextAction\": { \"action\": \"request-info\", \"prompt\": \"What is your login information?\" }\n}\n{\n  \"briefExplanation\": \"Today's doodle is about Henrietta Lacks, I'll remember that for our blog post\"\n  \"nextAction\": { \"action\": \"remember-info\", \"info\": \"Today's doodle is about Henrietta Lacks\" }\n}\n## stored info\n${JSON.stringify(info)}\n## instructions\n# observe the screenshot, and think about the next action\n# output your response in a json markdown code block\n`;\nfunction extractJsonFromMarkdown(mdString) {\n  const regex = /```json\\s*([\\s\\S]+?)\\s*```/; // This captures content between ```json and ```\n  const match = mdString.match(regex);\n  if (!match) return null;  // No JSON block found\n  const jsonString = match[1].trim();\n  try {\n      return JSON.parse(jsonString);\n  } catch (err) {\n      console.error('Failed to parse JSON:', err);",
+        "type": "code",
+        "location": "/main.js:32-65"
+    },
+    "25": {
+        "file_id": 2,
+        "content": "This code is parsing JSON blocks from Markdown content. It first defines a regular expression to match the JSON block, then uses it to extract the JSON content from the provided Markdown string. If a valid JSON block is found, it trims and parses the extracted JSON, returning it if successful. Otherwise, it returns null or logs an error message for failed parsing.",
+        "type": "comment"
+    },
+    "26": {
+        "file_id": 2,
+        "content": "      return null;  // Invalid JSON content\n  }\n}\nfunction createWindow() {\n  win = new BrowserWindow({\n    width: 1280,\n    height: 720,\n    titleBarStyle: 'hidden',\n    titleBarOverlay: {\n      color: '#18181b',\n      symbolColor: '#74b1be'\n    },\n    webPreferences: {\n      preload: path.join(__dirname, 'preload.js'),\n      webviewTag: true,\n      contextIsolation: false\n    }\n  })\n  ipcMain.on('current-url', (event, url) => {\n    win.webContents.send('update-url', url);\n  });\n  win.loadFile('index.html')\n}\napp.whenReady().then(async () => {\n  createWindow();\n  app.on('activate', () => {\n    if (BrowserWindow.getAllWindows().length === 0) {\n      createWindow()\n    }\n  });\n  let webview;\n  let labelData;\n  ipcMain.on('webview-ready', async (event, id) => {\n    webview = webContents.fromId(id);\n    console.log(`Acquired webviewId ${id}`);\n  });\n  ipcMain.on('label-data', (event, data) => {\n    labelData = JSON.parse(data);\n  });\n  async function screenshot() {\n    webview.send('observer', 'screenshot-start');\n    await sleep(100);",
+        "type": "code",
+        "location": "/main.js:66-115"
+    },
+    "27": {
+        "file_id": 2,
+        "content": "The code is responsible for creating a new BrowserWindow, handling events related to the webview, and taking a screenshot. It also includes checks for invalid JSON content and sets various window properties like width, height, and title bar style.",
+        "type": "comment"
+    },
+    "28": {
+        "file_id": 2,
+        "content": "    const image = await webview.capturePage();\n    webview.send('observer', 'screenshot-end');\n    await fs.writeFile('tmp/screenshot.png', image.toPNG());\n    await controller.uploadImage('tmp/screenshot.png');\n  }\n  async function exportLabel() {\n    webview.send('observer', 'screenshot-start');\n    await sleep(200);\n    const savedData = labelData;\n    webview.send('observer', 'screenshot-end');\n    await sleep(200);\n    const image = await webview.capturePage();\n    // Create unique filename\n    const timestamp = Date.now();\n    const screenshotFilename = `screenshot_${timestamp}.png`;\n    const {width, height} = image.getSize();\n    // Save the image with unique name\n    await fs.writeFile(`dataset/${screenshotFilename}`, image.toPNG());\n    let coco = JSON.parse(await fs.readFile('dataset/_annotations.coco.json'));\n    const image_id = Math.max(...coco.images.map(({ id }) => id), 0) + 1;\n    const annotations_id = Math.max(...coco.annotations.map(({ id }) => id), 0) + 1;\n    let annotations = savedData.reduce((all, { bboxs }, index) => {",
+        "type": "code",
+        "location": "/main.js:116-143"
+    },
+    "29": {
+        "file_id": 2,
+        "content": "Taking a screenshot and saving it with a timestamp, creating a unique filename.\nSending 'screenshot-start' message to observer and waiting for 200ms.\nReading label data from the file '_annotations.coco.json'.\nCreating new image IDs and annotations IDs based on current maximum values.\nLooping through saved label data, creating annotations, and saving them in the 'dataset/_annotations.coco.json' file.",
+        "type": "comment"
+    },
+    "30": {
+        "file_id": 2,
+        "content": "      let bbox_annotations = bboxs.map((bbox, bboxIndex) => {\n        return {\n          id: index + annotations_id + bboxIndex, \n          image_id,\n          category_id: 0,\n          bbox, \n          area: bbox[2] * bbox[3],\n          segmentation: [],\n          iscrowd: 0\n        }\n      });\n      return all.concat(bbox_annotations);\n    }, []);\n    coco.annotations = coco.annotations.concat(annotations);\n    // update coco image format for labeling\n    let cocoImageFormat = { \n      id: image_id,\n      width,\n      height,\n      file_name: screenshotFilename, // updated filename\n      license: 1, \n      date_captured: new Date()\n    };\n    coco.images.push(cocoImageFormat);\n    await fs.writeFile('dataset/_annotations.coco.json', JSON.stringify(coco, null, 2));\n  }\n  ipcMain.on('screenshot', async (event, id) => screenshot());\n  ipcMain.on('export', async (event, id) => exportLabel());\n  ipcMain.on('randomize', async (event, id) => {\n    function randomizeSize() {\n      const [minWidth, minHeight] = [1280, 720];",
+        "type": "code",
+        "location": "/main.js:144-180"
+    },
+    "31": {
+        "file_id": 2,
+        "content": "This code is creating a new COCO annotations JSON file for a dataset of images. It takes screenshots and creates bounding box annotations for objects within each image, then updates the COCO format for labeling. The code also provides functions to capture screenshots, export the annotated data, and randomize image sizes.",
+        "type": "comment"
+    },
+    "32": {
+        "file_id": 2,
+        "content": "      const [maxWidth, maxHeight] = [3440, 1440];\n      // Get the old window size and position\n      const [oldWidth, oldHeight] = win.getSize();\n      const [oldX, oldY] = win.getPosition();\n      // Generate new random size\n      const width = Math.floor(Math.random() * (maxWidth - minWidth + 1) + minWidth);\n      const height = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);\n      // Compute new position to keep bottom-right corner in the same position\n      const x = oldX + (oldWidth - width);\n      const y = oldY + (oldHeight - height);\n      // Set new size and position\n      win.setSize(width, height, false);\n      win.setPosition(x, y, false);\n    }\n    const urls = JSON.parse(await fs.readFile('dataset/urls.json'));\n    for(let i = 0; i < 10; i++) {\n      webview.send('navigate-webview', 'loadURL', urls.shuffles[parseInt(Math.random() * urls.shuffles.length)]);\n      await sleep(5000);\n      for(let i = 0; i < 10; i++) {\n        randomizeSize();\n        await sleep(100);\n        webview.send('shuffle');",
+        "type": "code",
+        "location": "/main.js:181-207"
+    },
+    "33": {
+        "file_id": 2,
+        "content": "This code resizes the window and updates its position while loading different URLs from a dataset.",
+        "type": "comment"
+    },
+    "34": {
+        "file_id": 2,
+        "content": "        await sleep(1500);\n        await exportLabel();\n      }\n    }\n    for(let i = 0; i < 10; i++) {\n      webview.send('navigate-webview', 'loadURL', urls.random[parseInt(Math.random() * urls.random.length)]);\n      await sleep(5000);\n      for(let i = 0; i < 10; i++) {\n        randomizeSize();\n        await sleep(100);\n        webview.send('randomize');\n        await sleep(1500);\n        await exportLabel();\n      }\n    }\n  });\n  let currentTask;\n  ipcMain.on('send', async (event, text) => {\n    currentTask = text;\n    await screenshot();\n    await controller.typeIntoPrompt(prompt(text, []));\n    await controller.clickSendButton();\n  });\n  ipcMain.on('continue', async (event, text) => {\n    await screenshot();\n    await controller.typeIntoPrompt(prompt(currentTask, []));\n    await controller.clickSendButton();\n  });\n  let action = () => {};\n  ipcMain.on('execute', async (event, text) => {\n    action();\n  });\n  controller.on('end_turn', (content) => {\n    if (BrowserWindow.getAllWindows().length === 0) return;\n    const data = extractJsonFromMarkdown(content);",
+        "type": "code",
+        "location": "/main.js:208-249"
+    },
+    "35": {
+        "file_id": 2,
+        "content": "1. Waits 1500 milliseconds and exports label.\n2. Navigates webview to a random URL every 5 seconds for 10 times.\n3. Randomizes the size of the webview every 100 milliseconds for 10 times.\n4. Exports the label after each iteration of navigation and size randomization.\n5. Listens for 'send' event, saves current task text, takes a screenshot, types the text into prompt, and clicks send button.\n6. Listens for 'continue' event, takes a screenshot, types previous current task text into prompt, and clicks send button.\n7. Defines an action function to be executed when 'execute' event is triggered with a text parameter.\n8. On 'end_turn' event, checks if there are any open BrowserWindow instances, and if so, extracts JSON data from Markdown content.",
+        "type": "comment"
+    },
+    "36": {
+        "file_id": 2,
+        "content": "    let msg = data === null ? content : data.briefExplanation;\n    win.webContents.send('end_turn', msg);\n    action = () => {\n      if(data != null) {\n        switch(data.nextAction.action) {\n          case \"click\":\n              console.log(`clicking ${JSON.stringify(labelData[data.nextAction.element])}`);\n              let { x, y } = labelData[data.nextAction.element];\n              webview.sendInputEvent({\n                type: 'mouseDown', \n                x, y,\n                clickCount: 1\n              });\n              webview.sendInputEvent({\n                type: 'mouseUp', \n                x, y,\n                clickCount: 1\n              });\n              break;\n          case \"type\": {\n              console.log(`typing ${data.nextAction.text} into ${JSON.stringify(labelData[data.nextAction.element])}`);\n              let { x, y } = labelData[data.nextAction.element];\n              webview.sendInputEvent({\n                type: 'mouseDown', \n                x, y,\n                clickCount: 1\n              });",
+        "type": "code",
+        "location": "/main.js:250-277"
+    },
+    "37": {
+        "file_id": 2,
+        "content": "Sends the end_turn message with a corresponding content, then defines an action function for handling the nextAction. If data is not null, it performs a switch case based on the nextAction's action type (click or type). It logs and executes the respective action on the webview.",
+        "type": "comment"
+    },
+    "38": {
+        "file_id": 2,
+        "content": "              webview.sendInputEvent({\n                type: 'mouseUp', \n                x, y,\n                clickCount: 1\n              });\n              for(let char of data.nextAction.text) {\n                webview.sendInputEvent({\n                  type: 'char', \n                  keyCode: char\n                });\n              }\n              break;\n            }\n          default:\n            console.log(`unknown action ${JSON.stringify(data.nextAction)}`);\n            break;\n        }\n      }\n    };\n  });\n  await controller.initialize();\n})\napp.on('window-all-closed', () => {\n  if (process.platform !== 'darwin') {\n    app.quit()\n  }\n})",
+        "type": "code",
+        "location": "/main.js:278-308"
+    },
+    "39": {
+        "file_id": 2,
+        "content": "This code handles various types of mouse and keyboard input events by sending them to the webview, and also initializes the controller for the application. If an unknown action is encountered, it logs a message.",
+        "type": "comment"
+    },
+    "40": {
+        "file_id": 3,
+        "content": "/package.json",
+        "type": "filepath"
+    },
+    "41": {
+        "file_id": 3,
+        "content": "This is a package.json file for an electron app called \"ai-browser\" with dependencies on electron, node-fetch, puppeteer, puppeteer-extra, and puppeteer-extra-plugin-stealth.",
+        "type": "summary"
+    },
+    "42": {
+        "file_id": 3,
+        "content": "{\n  \"name\": \"ai-browser\",\n  \"version\": \"1.0.0\",\n  \"description\": \"\",\n  \"main\": \"main.js\",\n  \"scripts\": {\n    \"start\": \"electron .\"\n  },\n  \"author\": \"\",\n  \"license\": \"ISC\",\n  \"dependencies\": {\n    \"electron\": \"^27.0.1\",\n    \"node-fetch\": \"^3.3.2\",\n    \"puppeteer\": \"^21.4.0\",\n    \"puppeteer-extra\": \"^3.3.6\",\n    \"puppeteer-extra-plugin-stealth\": \"^2.11.2\"\n  }\n}",
+        "type": "code",
+        "location": "/package.json:1-18"
+    },
+    "43": {
+        "file_id": 3,
+        "content": "This is a package.json file for an electron app called \"ai-browser\" with dependencies on electron, node-fetch, puppeteer, puppeteer-extra, and puppeteer-extra-plugin-stealth.",
+        "type": "comment"
+    },
+    "44": {
+        "file_id": 4,
+        "content": "/preload-view.js",
+        "type": "filepath"
+    },
+    "45": {
+        "file_id": 4,
+        "content": "The code customizes scrollbar styles, adds event listeners for navigation messages and URL changes using Electron's IPC API, shuffles web page elements randomly, removes labels, marks elements based on viewport position, generates clickable lists with specific properties and filters, applies random color generation, creates a floating border with visible labels, styles labels, appends and adds elements to the body, saves them in an array, and sends data via IPC.",
+        "type": "summary"
+    },
+    "46": {
+        "file_id": 4,
+        "content": "const customCSS = `\n    ::-webkit-scrollbar {\n        width: 10px;\n    }\n    ::-webkit-scrollbar-track {\n        background: #27272a;\n    }\n    ::-webkit-scrollbar-thumb {\n        background: #888;\n        border-radius: 0.375rem;\n    }\n    ::-webkit-scrollbar-thumb:hover {\n        background: #555;\n    }\n`;\nwindow.addEventListener('DOMContentLoaded', () => {\n    const styleTag = document.createElement('style');\n    styleTag.textContent = customCSS;\n    document.head.append(styleTag);\n});\nconst { ipcRenderer } = require('electron');\n// Listen for messages from preload.js to navigate\nipcRenderer.on('navigate-webview', (event, action, payload) => {\n    switch (action) {\n        case 'goBack':\n            if (window.history.length > 1) {\n                window.history.back();\n            }\n            break;\n        case 'goForward':\n            if (window.history.length > 1) {\n                window.history.forward();\n            }\n            break;\n        case 'reload':\n            window.location.reload();\n            break;",
+        "type": "code",
+        "location": "/preload-view.js:1-43"
+    },
+    "47": {
+        "file_id": 4,
+        "content": "This code defines custom CSS styles for scrollbars and adds event listeners to handle navigation messages from \"preload.js\" using Electron's IPC (Inter-Process Communication) API.",
+        "type": "comment"
+    },
+    "48": {
+        "file_id": 4,
+        "content": "        case 'loadURL':\n            window.location.href = payload;\n            break;\n    }\n});\n// Send the current URL whenever it changes\nwindow.addEventListener('load', () => {\n    ipcRenderer.send('current-url', window.location.href);\n    let oldHref = document.location.href;\n    const body = document.querySelector(\"body\");\n    const observer = new MutationObserver(mutations => {\n        if (oldHref !== document.location.href) {\n            oldHref = document.location.href;\n            ipcRenderer.send('current-url', window.location.href);\n        }\n    });\n    observer.observe(body, { childList: true, subtree: true });\n});\nwindow.addEventListener('beforeunload', () => {\n    ipcRenderer.send('current-url', window.location.href);\n});\nwindow.addEventListener('popstate', () => {\n    ipcRenderer.send('current-url', window.location.href);\n});\nipcRenderer.on('randomize', (event) => {\n   // Define random x and y coordinates within the dimensions of the document\n   var x = Math.floor(Math.random() * (document.body.scrollWidth + 1));",
+        "type": "code",
+        "location": "/preload-view.js:44-75"
+    },
+    "49": {
+        "file_id": 4,
+        "content": "This code handles page URL changes and sends current URL to the background process using IPC (Inter-process Communication). It uses a MutationObserver to detect any changes in the URL.",
+        "type": "comment"
+    },
+    "50": {
+        "file_id": 4,
+        "content": "   var y = Math.floor(Math.random() * (document.body.scrollHeight + 1));\n   // Scroll to the random positions\n   window.scrollTo(x, y);\n});\nipcRenderer.on('shuffle', (event) => {\n  // Helper function to shuffle a string\n  function shuffleString(str) {\n    var arr = str.split(''); \n    var len = arr.length;\n    // While there remain elements to shuffle…\n    for (var i = len - 1; i > 0; i--) {\n        // Pick a remaining element…\n        var j = Math.floor(Math.random() * (i + 1));\n        // And swap it with the current element.\n        var temp = arr[i];\n        arr[i] = arr[j];\n        arr[j] = temp;\n    }\n    return arr.join(''); // Convert Array back to string\n  }\n  function shuffleChildren(parent) {\n    if(parent.children && parent.children.length > 0) {\n        var children = Array.from(parent.children);\n        while (children.length) {\n            // Pick a random index\n            var randomIndex = Math.floor(Math.random() * children.length);\n            // Get the child at the random index\n            var child = children.splice(randomIndex, 1)[0];",
+        "type": "code",
+        "location": "/preload-view.js:76-108"
+    },
+    "51": {
+        "file_id": 4,
+        "content": "This code shuffles the elements of a web page by randomly scrolling to a new position and shuffling the order of children within a parent element using the shuffleString function.",
+        "type": "comment"
+    },
+    "52": {
+        "file_id": 4,
+        "content": "            // Append the child to the parent\n            parent.appendChild(child);\n            // If child node only contains text, then shuffle the text\n            if(child.children.length === 0) {\n                child.textContent = shuffleString(child.textContent);\n            }\n            // Recursively shuffle children's children\n            shuffleChildren(child);\n        }\n    }\n  }\n  // Call the function with the body as the parent node\n  shuffleChildren(document.body);\n  // Define random x and y coordinates within the dimensions of the document\n  var x = Math.floor(Math.random() * (document.body.scrollWidth + 1));\n  var y = Math.floor(Math.random() * (document.body.scrollHeight + 1));\n  // Scroll to the random positions\n  window.scrollTo(x, y);\n});\nipcRenderer.on('observer', (event, state, payload) => {\n  switch (state) {\n      case 'screenshot-start':\n          markPage();\n          break;\n      case 'screenshot-end':\n          unmarkPage();\n          break;\n  }\n});\n// DOM Labeler\nlet labels = [];\nfunction unmarkPage() {",
+        "type": "code",
+        "location": "/preload-view.js:109-146"
+    },
+    "53": {
+        "file_id": 4,
+        "content": "Appends child to parent, shuffles text if child only contains text, recursively shuffles children's children.\nCalls function with body as parent node and defines random x and y coordinates within document dimensions.\nScrolls to random positions on window.\nListens for 'observer' event with state and payload, marks/unmarks page based on states 'screenshot-start' or 'screenshot-end'. \nDefines an empty array 'labels' for DOM Labeler functionality.",
+        "type": "comment"
+    },
+    "54": {
+        "file_id": 4,
+        "content": "  for(const label of labels) {\n    document.body.removeChild(label);\n  }\n  labels = [];\n}\nfunction markPage() {\n  unmarkPage();\n  var bodyRect = document.body.getBoundingClientRect();\n  var items = Array.prototype.slice.call(\n    document.querySelectorAll('*')\n  ).map(function(element) {\n    var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);\n    var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);\n    var rects = [...element.getClientRects()].filter(bb => {\n      var center_x = bb.left + bb.width / 2;\n      var center_y = bb.top + bb.height / 2;\n      var elAtCenter = document.elementFromPoint(center_x, center_y);\n      return elAtCenter === element || element.contains(elAtCenter) \n    }).map(bb => {\n      const rect = {\n        left: Math.max(0, bb.left),\n        top: Math.max(0, bb.top),\n        right: Math.min(vw, bb.right),\n        bottom: Math.min(vh, bb.bottom)\n      };\n      return {\n        ...rect,\n        width: rect.right - rect.left,",
+        "type": "code",
+        "location": "/preload-view.js:147-180"
+    },
+    "55": {
+        "file_id": 4,
+        "content": "This code is removing all the labels from the HTML document and then marking each element on the page based on their position relative to the viewport.",
+        "type": "comment"
+    },
+    "56": {
+        "file_id": 4,
+        "content": "        height: rect.bottom - rect.top\n      }\n    });\n    var area = rects.reduce((acc, rect) => acc + rect.width * rect.height, 0);\n    return {\n      element: element,\n      include: \n        (element.tagName === \"INPUT\" || element.tagName === \"TEXTAREA\" || element.tagName === \"SELECT\") ||\n        (element.tagName === \"BUTTON\" || element.tagName === \"A\" || (element.onclick != null) || window.getComputedStyle(element).cursor == \"pointer\") ||\n        (element.tagName === \"IFRAME\" || element.tagName === \"VIDEO\")\n      ,\n      area,\n      rects,\n      text: element.textContent.trim().replace(/\\s{2,}/g, ' ')\n    };\n  }).filter(item =>\n    item.include && (item.area >= 20)\n  );\n  // Only keep inner clickable items\n  items = items.filter(x => !items.some(y => x.element.contains(y.element) && !(x == y)))\n  // Function to generate random colors\n  function getRandomColor() {\n    var letters = '0123456789ABCDEF';\n    var color = '#';\n    for (var i = 0; i < 6; i++) {\n      color += letters[Math.floor(Math.random() * 16)];",
+        "type": "code",
+        "location": "/preload-view.js:181-210"
+    },
+    "57": {
+        "file_id": 4,
+        "content": "This code snippet generates a list of clickable elements on the webpage and returns information about them, including their bounding rectangle, area size, and whether they are input fields, buttons, links, or other interactive elements. It also applies a filter to keep only items with an area greater than 20 pixels and removes inner clickable items. Additionally, it defines a function to generate random colors.",
+        "type": "comment"
+    },
+    "58": {
+        "file_id": 4,
+        "content": "    }\n    return color;\n  }\n  // Lets create a floating border on top of these elements that will always be visible\n  items.forEach(function(item, index) {\n    item.rects.forEach((bbox) => {\n      newElement = document.createElement(\"div\");\n      var borderColor = getRandomColor();\n      newElement.style.outline = `2px dashed ${borderColor}`;\n      newElement.style.position = \"fixed\";\n      newElement.style.left = bbox.left + \"px\";\n      newElement.style.top = bbox.top + \"px\";\n      newElement.style.width = bbox.width + \"px\";\n      newElement.style.height = bbox.height + \"px\";\n      newElement.style.pointerEvents = \"none\";\n      newElement.style.boxSizing = \"border-box\";\n      newElement.style.zIndex = 2147483647;\n      // newElement.style.background = `${borderColor}80`;\n      // Add floating label at the corner\n      var label = document.createElement(\"span\");\n      label.textContent = index;\n      label.style.position = \"absolute\";\n      label.style.top = \"-19px\";\n      label.style.left = \"0px\";\n      label.style.background = borderColor;",
+        "type": "code",
+        "location": "/preload-view.js:211-237"
+    },
+    "59": {
+        "file_id": 4,
+        "content": "Generates a floating border with a visible label on top of each element for better visibility.",
+        "type": "comment"
+    },
+    "60": {
+        "file_id": 4,
+        "content": "      label.style.color = \"white\";\n      label.style.padding = \"2px 4px\";\n      label.style.fontSize = \"12px\";\n      label.style.borderRadius = \"2px\";\n      newElement.appendChild(label);\n      document.body.appendChild(newElement);\n      labels.push(newElement);\n      // item.element.setAttribute(\"-ai-label\", label.textContent);\n    });\n  })\n  ipcRenderer.send('label-data', JSON.stringify(items.map(item => {\n    return {\n        x: (item.rects[0].left + item.rects[0].right) / 2, \n        y: (item.rects[0].top + item.rects[0].bottom) / 2,\n        bboxs: item.rects.map(({left, top, width, height}) => [left, top, width, height])\n    }\n  })));\n}",
+        "type": "code",
+        "location": "/preload-view.js:238-257"
+    },
+    "61": {
+        "file_id": 4,
+        "content": "This code sets the style of a label, appends it to an element, adds that element to the body, pushes the element into a labels array, and sends label data via IPC.",
+        "type": "comment"
+    },
+    "62": {
+        "file_id": 5,
+        "content": "/preload.js",
+        "type": "filepath"
+    },
+    "63": {
+        "file_id": 5,
+        "content": "The code creates a mini-browser with navigation controls and event listeners for URL input, back/forward buttons, webview, screenshot capture, action execution, data export, IPC communication and handles UI interactions. It also includes an event listener for a \"randomize\" button, listens for \"end_turn\" messages, creates and appends div elements to the chat container in an instant messaging application.",
+        "type": "summary"
+    },
+    "64": {
+        "file_id": 5,
+        "content": "const { ipcRenderer } = require('electron');\ndocument.addEventListener(\"DOMContentLoaded\", function () {\n    // mini-browser setup\n    const urlInput = document.getElementById('urlInput');\n    const webview = document.getElementById('webview');\n    document.getElementById('backButton').addEventListener('click', () => {\n        webview.send('navigate-webview', 'goBack');\n    });\n    document.getElementById('forwardButton').addEventListener('click', () => {\n        webview.send('navigate-webview', 'goForward');\n    });\n    document.getElementById('reloadButton').addEventListener('click', () => {\n        webview.send('navigate-webview', 'reload');\n    });\n    urlInput.addEventListener('keypress', (e) => {\n        if (e.key === 'Enter') {\n            webview.send('navigate-webview', 'loadURL', urlInput.value);\n        }\n    });\n    webview.addEventListener('will-navigate', (event) => {\n        console.log(event);\n        urlInput.value = event.url;\n    });\n    ipcRenderer.on('update-url', (event, url) => {\n        urlInput.value = url;",
+        "type": "code",
+        "location": "/preload.js:1-33"
+    },
+    "65": {
+        "file_id": 5,
+        "content": "This code sets up a mini-browser with basic navigation controls and event listeners for the URL input, back/forward buttons, and webview. It also listens for 'update-url' events from Electron's IPC to update the URL in the input field.",
+        "type": "comment"
+    },
+    "66": {
+        "file_id": 5,
+        "content": "    });\n    webview.addEventListener('dom-ready', () => {\n        console.log(webview.getWebContentsId());\n        ipcRenderer.send('webview-ready', webview.getWebContentsId());\n    });\n    // Agent stuff\n    const inputElement = document.querySelector('input[type=\"text\"]');\n    const sendButton = document.querySelector('button#send');\n    const chatContainer = document.querySelector('#chat-container');\n    document.querySelector('#screenshot').addEventListener('click', () => ipcRenderer.send('screenshot'));\n    document.querySelector('#continue').addEventListener('click', () => ipcRenderer.send('continue'));\n    document.querySelector('#execute').addEventListener('click', () => ipcRenderer.send('execute'));\n    document.querySelector('#mark').addEventListener('click', () => webview.send('observer', 'screenshot-start'));\n    document.querySelector('#unmark').addEventListener('click', () => webview.send('observer', 'screenshot-end'));\n    document.querySelector('#export').addEventListener('click', () => ipcRenderer.send('export'));",
+        "type": "code",
+        "location": "/preload.js:34-53"
+    },
+    "67": {
+        "file_id": 5,
+        "content": "This code initializes event listeners for various elements on a webpage, enabling interaction with the user interface. Event triggers include screenshot capture, executing actions, and exporting data. These interactions are communicated through Inter-Process Communication (IPC) to handle further processing.",
+        "type": "comment"
+    },
+    "68": {
+        "file_id": 5,
+        "content": "    document.querySelector('#randomize').addEventListener('click', () => ipcRenderer.send('randomize'));\n    ipcRenderer.on('end_turn', (event, content) => {\n        // Create the message div and its container\n        const messageDiv = document.createElement('div');\n        messageDiv.className = \"py-2 px-3 bg-indigo-700 text-indigo-200 rounded-lg shadow-md break-words\";\n        messageDiv.textContent = content; // This ensures no HTML or scripts in `content` are executed\n        const containerDiv = document.createElement('div');\n        containerDiv.className = \"mb-2 mr-8\";\n        containerDiv.appendChild(messageDiv);\n        // Append the message to the chat container\n        chatContainer.appendChild(containerDiv);\n        // Scroll to the bottom to show the newest messages\n        chatContainer.scrollTop = chatContainer.scrollHeight;\n    });\n    function sendMessage() {\n        const userMessage = inputElement.value;\n        if (!userMessage.trim()) return;\n        // Append user's message\n        chatContainer.innerHTML += `",
+        "type": "code",
+        "location": "/preload.js:54-78"
+    },
+    "69": {
+        "file_id": 5,
+        "content": "This code sets an event listener for a \"randomize\" button click and listens for an \"end_turn\" message from the ipcRenderer. When \"randomize\" is clicked, it sends an \"randomize\" message to ipcRenderer. Upon receiving an \"end_turn\" message, it creates a div element with the content received, appends it to a container, and appends that container to the chat container. It then scrolls to the bottom of the chat container to show the newest messages.",
+        "type": "comment"
+    },
+    "70": {
+        "file_id": 5,
+        "content": "          <div class=\"mb-2 ml-8\">\n              <div class=\"py-2 px-3 bg-zinc-200 text-zinc-700 rounded-lg shadow-md break-words\">\n                  ${userMessage}\n              </div>\n          </div>\n      `;\n        // Clear the input after sending the message\n        inputElement.value = '';\n        // Scroll to the bottom to show the newest messages\n        chatContainer.scrollTop = chatContainer.scrollHeight;\n        ipcRenderer.send('send', userMessage);\n    }\n    inputElement.addEventListener('keypress', function (e) {\n        if (e.key === 'Enter') {\n            sendMessage();\n        }\n    });\n    sendButton.addEventListener('click', sendMessage);\n});",
+        "type": "code",
+        "location": "/preload.js:79-102"
+    },
+    "71": {
+        "file_id": 5,
+        "content": "This code snippet is part of an instant messaging application. It handles sending messages by updating the chat container, clearing input fields, and scrolling to show the newest messages.",
+        "type": "comment"
+    }
+}
