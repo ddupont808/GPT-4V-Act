@@ -66,20 +66,23 @@
         ul {
             list-style: none;
         }
+        #feeling-lucky:hover{
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <article class="markdown-body">
-        <h2>Project Structure<span hierarchy="0" class="partial-repository-url"> of: ddupont808/GPT-4V-Act</span><div style="float: right;"><a href="index.html"><i class="bi bi-search"></i></a></div></h2>
+        <h2>Project structure<span hierarchy="0" class="partial-repository-url"> of: ddupont808/GPT-4V-Act</span><div style="float: right;"><a title="Document index" style="margin:3.5px;" href="index.html"><i class="bi bi-search"></i></a><a title="Feeling lucky" style="margin:3.5px;" id="feeling-lucky" href="#"><i class="bi bi-dice-3"></i></a><a title="Expand tree" style="margin:3.5px;" href="tree.html?full=true" id="expand-tree"><i class="bi bi-caret-down-square"></i></a></div></h2>
 <ul>
 <li><span hierarchy="0" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/"><code>GPT-4V-Act</code></strong> <em>Mini-browser AI tool with GPT4V and UI automation</em></span><ul>
-<li><a href="index.html?q=/README.md" id="/README.md"><code>README&period;md</code></a> <em>Accessibility tool with GPT-4V and Set-of-Mark Prompting for UI automation.</em></li>
-<li><a href="index.html?q=/chatgpt.js" id="/chatgpt.js"><code>chatgpt&period;js</code></a> <em>ChatGPT bot using Puppeteer for OpenAI interaction</em></li>
-<li><a href="index.html?q=/main.js" id="/main.js"><code>main&period;js</code></a> <em>Main.js: Initializes modules, controllers, actions, handles events and logs unknowns.</em></li>
-<li><a href="index.html?q=/package.json" id="/package.json"><code>package&period;json</code></a> <em>ai-browser app dependencies in package.json</em></li>
-<li><a href="index.html?q=/preload-view.js" id="/preload-view.js"><code>preload-view&period;js</code></a> <em>Preload script: Customizes scrollbars, adds event listeners, shuffles elements.</em></li>
-<li><a href="index.html?q=/preload.js" id="/preload.js"><code>preload&period;js</code></a> <em>Mini-browser with navigation, event listeners, and UI interactions.</em></li>
+<li><a class="file_link" href="index.html?q=/chatgpt.js" id="/chatgpt.js"><code>chatgpt&period;js</code></a> <em>ChatGPT bot using Puppeteer for OpenAI interaction</em></li>
+<li><a class="file_link" href="index.html?q=/main.js" id="/main.js"><code>main&period;js</code></a> <em>Main.js: Initializes modules, controllers, actions, handles events and logs unknowns.</em></li>
+<li><a class="file_link" href="index.html?q=/package.json" id="/package.json"><code>package&period;json</code></a> <em>ai-browser app dependencies in package.json</em></li>
+<li><a class="file_link" href="index.html?q=/preload-view.js" id="/preload-view.js"><code>preload-view&period;js</code></a> <em>Preload script: Customizes scrollbars, adds event listeners, shuffles elements.</em></li>
+<li><a class="file_link" href="index.html?q=/preload.js" id="/preload.js"><code>preload&period;js</code></a> <em>Mini-browser with navigation, event listeners, and UI interactions.</em></li>
+<li><a class="file_link" href="index.html?q=/README.md" id="/README.md"><code>README&period;md</code></a> <em>Accessibility tool with GPT-4V and Set-of-Mark Prompting for UI automation.</em></li>
 </ul>
 </li>
 </ul>
@@ -99,14 +102,27 @@
 
         const queryParams = getQueryParams(window.location.search);
         const show_full = queryParams.full == "true";
+        //const is_random = queryParams.random == 'true';
+        function feelingLucky() {
+            var elements = document.getElementsByClassName("file_link");
+            var randomIndex = Math.floor(Math.random() * elements.length);
+            window.location = elements[randomIndex].href;
+        }
+        //if (is_random) {feelingLucky();}
+        document.getElementById("feeling-lucky").onclick = feelingLucky;
         if (!show_full) {
             const spans = document.querySelectorAll('span');
             for (let span of spans) {
                 if (span.getAttribute("hierarchy") == '0') { continue }
-
                 toggleVisibility(span);
             }
+        } else {
+            const expand_elem = document.getElementById('expand-tree');
+            expand_elem.setAttribute("href", "tree.html");
+            expand_elem.setAttribute("title", "Undo expand");
+            expand_elem.innerHTML = '<i class="bi bi-caret-up-square"></i>'
         }
+
     </script>
 </body>
 
