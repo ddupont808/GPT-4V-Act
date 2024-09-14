@@ -47,10 +47,23 @@ ${JSON.stringify(info)}
 
 class OpenAIChatController extends EventEmitter {
     async initialize() {
-      console.log(__dirname)
-        this.openai = new OpenAI({
-            apiKey: await fs.readFile(path.join(__dirname, '../keys/openai.txt')),
-          });
+        console.log(__dirname);
+        
+        let apiKey = process.env.OPENAI_API_KEY;
+        
+        if (!apiKey) {
+            try {
+                apiKey = await fs.readFile(path.join(__dirname, '../keys/openai.txt'), 'utf8');
+            } catch (error) {
+                console.error('Failed to read API key from file:', error);
+            }
+        }
+        
+        if (!apiKey) {
+            throw new Error('OpenAI API key not found in environment variable or file');
+        }
+        
+        this.openai = new OpenAI({ apiKey });
     }
 
     async uploadImageData(imageData) {
