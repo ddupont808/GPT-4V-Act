@@ -50,8 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelector('#mark').addEventListener('click', () => webview.send('observer', 'screenshot-start'));
     document.querySelector('#unmark').addEventListener('click', () => webview.send('observer', 'screenshot-end'));
-    document.querySelector('#export').addEventListener('click', () => ipcRenderer.send('export'));
-    document.querySelector('#randomize').addEventListener('click', () => ipcRenderer.send('randomize'));
+    // document.querySelector('#export').addEventListener('click', () => ipcRenderer.send('export'));
+    // document.querySelector('#randomize').addEventListener('click', () => ipcRenderer.send('randomize'));
     
     ipcRenderer.on('end_turn', (event, content) => {
         // Create the message div and its container

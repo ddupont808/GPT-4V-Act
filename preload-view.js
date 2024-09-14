@@ -212,11 +212,71 @@ function markPage() {
     return color;
   }
 
+  function invertColor(hex) {
+    if (hex.indexOf('#') === 0) {
+        hex = hex.slice(1);
+    }
+    // convert 3-digit hex to 6-digits.
+    if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    if (hex.length !== 6) {
+        throw new Error('Invalid HEX color.');
+    }
+    // invert color components
+    var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+        g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+        b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+    // pad each with zeros and return
+    return '#' + padZero(r) + padZero(g) + padZero(b);
+  }
+
+  function padZero(str, len) {
+    len = len || 2;
+    var zeros = new Array(len).join('0');
+    return (zeros + str).slice(-len);
+  }
+
+  // Add random IDs
+  let idSet = new Set();
+  items = items.map(item => {
+    let id;
+    do { // generate unique id
+      id = Math.floor(Math.random() * items.length * 10);
+    } while(idSet.has(id));
+    idSet.add(id);
+
+    return {
+      id,
+      ...item
+    }
+  });
+
+  // Get ARIA and other representation information
+  console.log('-- aria start --');
+  items = items.map(item => {
+    let { id, element } = item;
+    let { ariaDescription, ariaLabel } = element;
+
+    let innerText = element.innerText;
+
+    
+    console.log(id, ariaDescription, ariaLabel, innerText);
+
+    return {
+      representation: ariaLabel,
+      ...item
+    };
+  });
+  console.log('-- aria end --');
+
   // Lets create a floating border on top of these elements that will always be visible
   items.forEach(function(item, index) {
     item.rects.forEach((bbox) => {
+      let borderColor = `hsl(${parseInt(Math.random() * 360)}, 100%, 25%)`;
+      let textColor = `white`;
+
       newElement = document.createElement("div");
-      var borderColor = getRandomColor();
       newElement.style.outline = `2px dashed ${borderColor}`;
       newElement.style.position = "fixed";
       newElement.style.left = bbox.left + "px";
@@ -229,15 +289,16 @@ function markPage() {
       // newElement.style.background = `${borderColor}80`;
       
       // Add floating label at the corner
-      var label = document.createElement("span");
-      label.textContent = index;
+      let label = document.createElement("span");
+      label.textContent = item.id;
       label.style.position = "absolute";
-      label.style.top = "-19px";
+      label.style.top = `-${Math.min(19, bbox.top)}px`;
       label.style.left = "0px";
       label.style.background = borderColor;
-      label.style.color = "white";
+      label.style.color = textColor;
       label.style.padding = "2px 4px";
-      label.style.fontSize = "12px";
+      label.style.fontSize = "14px";
+      label.style.fontFamily = "monospace";
       label.style.borderRadius = "2px";
       newElement.appendChild(label);
       
@@ -251,7 +312,8 @@ function markPage() {
     return {
         x: (item.rects[0].left + item.rects[0].right) / 2, 
         y: (item.rects[0].top + item.rects[0].bottom) / 2,
-        bboxs: item.rects.map(({left, top, width, height}) => [left, top, width, height])
+        bboxs: item.rects.map(({left, top, width, height}) => [left, top, width, height]),
+        id: item.id
     }
   })));
 }

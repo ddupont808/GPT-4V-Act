@@ -9,10 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^27.0.1",
+    "electron": "^27.3.5",
     "node-fetch": "^3.3.2",
-    "puppeteer": "^21.4.0",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "openai": "^4.28.4"
   }
 }

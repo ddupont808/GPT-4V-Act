@@ -1,12 +1,9 @@
 # GPT-4V-Act: Chromium Copilot
 
-> ⚠️ **Important Note:** As GPT-4V(ision) has not yet been made publicly available, this project necessitates an active ChatGPT Plus subscription for multimodal prompting access. It's worth noting that the tactics used by this project to tap into an unofficial GPT-4V API may contravene the associated ChatGPT Term of Service clause:
->> **2.** (c) **Restrictions:**  You may not ... (iv) except as permitted through the API, use any automated or programmatic method to extract data or output from the Services, including scraping, web harvesting, or web data extraction;
+> 🔥 **Update (September 14, 2024)**: Check out [Windows Agent Arena (WAA)](https://github.com/microsoft/windowsagentarena)! This project incorporates all the features previously planned for GPT-4V-Act, including AI labeling to enable set-of-marks prompting in desktop UI environments. 
+
 
 GPT-4V-Act serves as an eloquent multimodal AI assistant that harmoniously combines GPT-4V(ision) with a web browser. It's designed to mirror the input and output of a human operator—primarily screen feedback and low-level mouse/keyboard interaction. The objective is to foster a smooth transition between human-computer operations, facilitating the creation of tools that considerably boost the accessibility of any user interface (UI), aid workflow automation, and enable automated UI testing.
-
-
-https://github.com/ddupont808/GPT-4V-Act/assets/3820588/fbcde8d1-a7d6-4089-95f6-fd099cc98a0d
 
 
 ## How it works
