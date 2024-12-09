@@ -12,5 +12,8 @@
     "electron": "^27.3.5",
     "node-fetch": "^3.3.2",
     "openai": "^4.28.4"
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.32.1"
   }
 }

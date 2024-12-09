@@ -43,6 +43,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputElement = document.querySelector('input[type="text"]');
     const sendButton = document.querySelector('button#send');
     const chatContainer = document.querySelector('#chat-container');
+    const thinkingIndicator = document.createElement('div');
+    thinkingIndicator.classList.add('mb-2', 'mr-8', 'hidden');
+    thinkingIndicator.innerHTML = `
+        <div class="py-2 px-3 bg-transparent text-indigo-200 rounded-lg break-words">
+            🧠 Thinking...
+        </div>
+    `;
+    
+    ipcRenderer.on('thinking', (event, isThinking) => {
+        if (isThinking) {
+            chatContainer.appendChild(thinkingIndicator);
+            thinkingIndicator.classList.remove('hidden');
+        } else {
+            thinkingIndicator.classList.add('hidden');
+        }
+        requestAnimationFrame(() => {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
+    });
 
     document.querySelector('#screenshot').addEventListener('click', () => ipcRenderer.send('screenshot'));
     document.querySelector('#continue').addEventListener('click', () => ipcRenderer.send('continue'));
@@ -53,20 +72,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // document.querySelector('#export').addEventListener('click', () => ipcRenderer.send('export'));
     // document.querySelector('#randomize').addEventListener('click', () => ipcRenderer.send('randomize'));
     
+
     ipcRenderer.on('end_turn', (event, content) => {
-        // Create the message div and its container
+        if (thinkingIndicator.parentNode === chatContainer) {
+            chatContainer.removeChild(thinkingIndicator);
+        }
+        
         const messageDiv = document.createElement('div');
         messageDiv.className = "py-2 px-3 bg-indigo-700 text-indigo-200 rounded-lg shadow-md break-words";
-        messageDiv.textContent = content; // This ensures no HTML or scripts in `content` are executed
-    
+        messageDiv.textContent = content;
+
         const containerDiv = document.createElement('div');
         containerDiv.className = "mb-2 mr-8";
         containerDiv.appendChild(messageDiv);
-    
-        // Append the message to the chat container
-        chatContainer.appendChild(containerDiv);
         
-        // Scroll to the bottom to show the newest messages
+        chatContainer.appendChild(containerDiv);
+        chatContainer.appendChild(thinkingIndicator);
         chatContainer.scrollTop = chatContainer.scrollHeight;
     });
 
