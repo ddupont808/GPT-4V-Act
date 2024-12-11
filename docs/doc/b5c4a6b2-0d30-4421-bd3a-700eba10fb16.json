@@ -1,0 +1,25 @@
+{
+    "summary": "A user employs Puppeteer with a stealth plugin to interact with OpenAI chat, capturing and logging conversation data from the backend API. The code is a chatbot implementation using Puppeteer library, featuring methods for typing, sending, uploading images, and closing browser upon completion.",
+    "details": [
+        {
+            "comment": "Initializing Puppeteer with stealth plugin for browser emulation and launching a non-headless browser instance to interact with OpenAI chat.",
+            "location": "\"/media/root/Toshiba XG3/works/GPT-4V-Act/docs/src/chatgpt.js\":0-29",
+            "content": "const puppeteer = require('puppeteer-extra');\nconst EventEmitter = require('events');\n// add stealth plugin and use defaults (all evasion techniques) \nconst StealthPlugin = require('puppeteer-extra-plugin-stealth') \npuppeteer.use(StealthPlugin()) \nconst {executablePath} = require('puppeteer') \nclass OpenAIChatController extends EventEmitter {\n    constructor() {\n        super();\n        this.browser = null;\n        this.page = null;\n    }\n    async initialize() {\n        this.browser = await puppeteer.launch({\n            headless: false, // Launch browser in non-headless mode so you can see what's happening\n            userDataDir: \"./user_data\", // Persist user data so you can login\n            executablePath: executablePath()\n        });\n        this.page = await this.browser.newPage();\n        await this.page.exposeFunction('emitEndTurn', (data) => this.emit('end_turn', data));\n        await this.page.goto('https://chat.openai.com/?model=gpt-4');\n        await this.preparePage();\n    }\n    async preparePage() {"
+        },
+        {
+            "comment": "Intercepting and logging conversation data from OpenAI backend API.",
+            "location": "\"/media/root/Toshiba XG3/works/GPT-4V-Act/docs/src/chatgpt.js\":30-50",
+            "content": "        await this.page.waitForSelector('input[type=\"file\"]');\n        await this.page.evaluate(() => {\n            const {fetch: origFetch} = window;\n            window.fetch = async (...args) => {\n              const response = await origFetch(...args);\n              if(args[0] === \"https://chat.openai.com/backend-api/conversation\") {\n                console.log(\"intercepting conversation...\");\n                const { body } = response.clone();\n                const raw = await new Response(body).text();\n                const chunks = raw.split('\\ndata: ');\n                for(let chunk of chunks) {\n                    chunk = chunk.trim();\n                    if(chunk.startsWith('{')) {\n                        console.log(chunk);\n                        try { \n                            let msg = JSON.parse(chunk);\n                            if(msg.message && msg.message.end_turn) {\n                                console.log(msg.message.content.parts);\n                                window.emitEndTurn(msg.message.content.parts.join(''));"
+        },
+        {
+            "comment": "This code is a part of a chatbot implementation using Puppeteer library. It contains methods to type into a prompt, click the send button, and upload an image. The `preparePage` method initializes the page with necessary configurations. It throws an error if the `page` variable is not initialized.",
+            "location": "\"/media/root/Toshiba XG3/works/GPT-4V-Act/docs/src/chatgpt.js\":51-86",
+            "content": "                                break;\n                            }\n                        } catch( ex ) { }\n                    }\n                }\n              }\n              return response;\n            };\n        });\n    }\n    async typeIntoPrompt(text) {\n        if (!this.page) {\n            throw new Error('You need to initialize first');\n        }\n        await this.page.type('#prompt-textarea', text.split('\\n').join(';'));\n    }\n    async clickSendButton() {\n        if (!this.page) {\n            throw new Error('You need to initialize first');\n        }\n        await this.page.waitForSelector('button[data-testid=\"send-button\"]:not([disabled])');\n        await this.page.click('[data-testid=\"send-button\"]');\n    }\n    async uploadImage(filePath) {\n        if (!this.page) {\n            throw new Error('You need to initialize first');\n        }\n        await this.page.reload();\n        await this.preparePage();\n        const input = await this.page.$('input[type=\"file\"]');\n        await input.uploadFile(filePath);"
+        },
+        {
+            "comment": "The code waits for an upload to complete and then closes the browser after that.",
+            "location": "\"/media/root/Toshiba XG3/works/GPT-4V-Act/docs/src/chatgpt.js\":87-99",
+            "content": "        // wait until upload is complete\n        await this.page.waitForSelector('button[data-testid=\"send-button\"]:not([disabled])');\n    }\n    async close() {\n        if (this.browser) {\n            await this.browser.close();\n        }\n    }\n}\nmodule.exports = OpenAIChatController;"
+        }
+    ]
+}

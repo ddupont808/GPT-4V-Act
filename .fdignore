@@ -1,0 +1,5 @@
+.*
+dataset
+*.{png,html,}
+package-lock.json
+docs
